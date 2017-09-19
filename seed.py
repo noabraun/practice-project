@@ -54,16 +54,11 @@ def load_movies():
         else:
             title = row[1]
 
-        if row[4]:
-            url = row[4]
-        else:
-            url = None
-        #take out if else
 
         movie = Movie(movie_id=row[0],
                       title=title,
                       released_at=date,
-                      imdb_url=url)
+                      imdb_url=row[4])
 
         db.session.add(movie)
 
