@@ -1,0 +1,32 @@
+<!doctype html>
+<html>
+<head>
+  <title>Ratings</title>
+  {% for message in get_flashed_messages() %}
+    {{ message }}
+  {% endfor %}
+
+    <a id='login-link' href='/login-form'><button name='login' id='login'>Login</button></a>
+
+    <script src="https://code.jquery.com/jquery.js"></script>
+
+    {% if 'email' in session %}
+        <script>
+            $('#login-link').attr('href', '/logout');
+            $('#login').html('Logout');
+        </script>
+
+
+    {% endif %}
+
+
+</head>
+
+<body>
+  Ratings
+  <hr>
+
+  {% block content %} put your content here {% endblock %}
+
+</body>
+</html>

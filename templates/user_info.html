@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block content %}
+
+    <h2>User Info</h2>
+    Age: {{ user_info['age'] }}<br>
+    Zipcode: {{ user_info['zipcode'] }}<br>
+    Ratings:
+    <table>
+      <tr>
+        <th>Movie</th>
+        <th>Score</th>
+      </tr>
+
+      {% for rating in user_info['ratings'] %}
+      <tr>
+        <td>{{ user_info.get('ratings').get(rating).get('title') }}</td>
+        <td>{{ user_info.get('ratings').get(rating).get('score') }}</td>
+      </tr>
+      {% endfor %}
+    </table>
+
+{% endblock %}
+

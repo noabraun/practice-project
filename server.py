@@ -49,6 +49,53 @@ def display_user_info(user_id):
     return render_template('user_info.html', user_info=user_info)
 
 
+@app.route('/movies')
+def movie_list():
+    """Show list of movies"""
+
+    movies = Movie.query.order_by('title').all()
+    return render_template('movie_list.html', movies=movies)
+
+
+@app.route('/movies/<movie_id>')
+def display_movie_info(movie_id):
+    movie = Movie.query.get(movie_id)
+    ratings = {}
+    total_ratings = 0
+    score_sum = 0.0
+    for rating in movie.ratings:
+        ratings[rating.rating_id] = rating.score
+        total_ratings += 1
+        score_sum += rating.score
+
+    release = movie.released_at.strftime('%B %d, %Y')
+    average = '{:.2f}'.format((score_sum/total_ratings))
+    movie_info = {'title': movie.title, 'url': movie.imdb_url, 'released_at': release, 'movie_id': movie.movie_id}
+    return render_template('movie_info.html',
+                           movie_info=movie_info,
+                           total=total_ratings,
+                           average=average,
+                           ratings=ratings)
+
+
+@app.route('/rate-movie/<movie_id>', methods=['POST'])
+def rate_movie(movie_id):
+    rating = request.form.get('rating')
+    movie_id = movie_id
+    user = User.query.filter(User.email == session['email']).first()
+    if Rating.query.filter(Rating.user_id == user.user_id, Rating.movie_id == movie_id).first():
+        user_rating = Rating.query.filter(Rating.user_id == user.user_id, Rating.movie_id == movie_id).first()
+        user_rating.score = rating
+        flash('We have updated your review')
+    else:
+        user_rating = Rating(movie_id=movie_id, user_id=user.user_id, score=rating)
+        db.session.add(user_rating)
+        flash('We have added your review')
+    db.session.commit()
+
+    return display_movie_info(movie_id)
+
+
 @app.route('/registration-form')
 def show_registration_form():
     """Shows registration form"""
@@ -74,6 +121,7 @@ def register():
         session['email'] = email
 
     return redirect('/')  # change redirect route
+
 
 
 @app.route('/login-form')

@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% block content %}
+
+    <h2>Movie Info</h2>
+    Title: <a href='{{ movie_info['url'] }}'>{{ movie_info['title'] }}</a><br>
+    Release Date: {{ movie_info['released_at'] }}<br>
+    <br>
+    Average Rating: {{ average }} out of {{ total }} ratings
+
+    <p id='all_ratings'>Show All Ratings</p>
+      <div id='ratings' hidden>
+        <ul>
+        {% for rating in ratings %}
+          <li>{{ ratings[rating] }}</li>
+        {% endfor %}
+        </ul>
+      </div>
+
+      {% if 'email' in session %}
+          <form action="/rate-movie/{{ movie_info['movie_id'] }}" method='POST'>
+            Rate movie out of 5: <input type='text' id='rate_movie' name='rating'>
+            <input type='submit'>
+          </form>
+
+      {% endif %}
+
+  <script>
+    $('#all_ratings').on('mouseover', function() {
+      $('#ratings').show();
+    });
+    $('#all_ratings').on('mouseout', function() {
+      $('#ratings').hide();
+    });
+  </script>
+
+
+
+{% endblock %}
