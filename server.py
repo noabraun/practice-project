@@ -34,6 +34,84 @@ def user_list():
     return render_template('user_list.html', users=users)
 
 
+@app.route('/users/<user_id>')
+def display_user_info(user_id):
+    user = User.query.get(user_id)
+    ratings = {}
+    for rating in user.ratings:
+        ratings[rating.movie_id] = {'title': rating.movie.title, 'score': rating.score}
+
+    print ratings
+    # users = User.query.options(db.joinedload('user_id')).all()
+    # for user in users:
+    #     if user. is not None:
+    user_info = {'age': user.age, 'zipcode': user.zipcode, 'ratings': ratings}
+    return render_template('user_info.html', user_info=user_info)
+
+
+@app.route('/registration-form')
+def show_registration_form():
+    """Shows registration form"""
+
+    return render_template('registration.html')
+
+
+@app.route('/register', methods=['POST'])
+def register():
+    """Adds user to database if not an existing user"""
+
+    email = request.form.get('email')
+    password = request.form.get('password')
+
+    if User.query.filter(User.email == email).first():
+        flash('Account already exists! Please sign in')
+    else:
+        user = User(email=email, password=password)
+
+        db.session.add(user)
+        db.session.commit()
+        flash('User added!')
+        session['email'] = email
+
+    return redirect('/')  # change redirect route
+
+
+@app.route('/login-form')
+def show_login_form():
+    """Shows login form"""
+
+    return render_template('login.html')
+
+
+@app.route('/login')
+def login():
+    """ Logs in the user, queries the db"""
+    email = request.args.get('email')
+    password = request.args.get('password')
+    u = User.query
+
+    if u.filter(User.email == email).first():
+        current_user = u.filter(User.email == email).first()
+
+        if current_user.password == password:
+            flash('You have been logged in')
+            session['email'] = email
+            return redirect('/')
+        else:
+            flash('Confirm that you have entered the correct password')
+            return redirect('login-form')
+    else:
+        flash('We couldn\'t find your email in our records - please register for an account')
+        return redirect('/registration-form')
+
+
+@app.route('/logout')
+def logout():
+    flash('You have logged out!')
+    session.pop('email', None)
+
+    return redirect('/')
+
 if __name__ == "__main__":
     # We have to set debug=True here, since it has to be True at the
     # point that we invoke the DebugToolbarExtension
@@ -44,7 +122,6 @@ if __name__ == "__main__":
 
     # Use the DebugToolbar
     DebugToolbarExtension(app)
-
-
+    DEBUG_TB_INTERCEPT_REDIRECTS = False
 
     app.run(port=5000, host='0.0.0.0')
