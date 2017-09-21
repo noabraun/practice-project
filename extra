@@ -1,24 +1,14 @@
-
-    //     function confirm(evt) {
-    //         evt.preventDefault()
-    //         var inputData = {
-    //             'email': $('#email-input').val(),
-    //             'password': $('#password-input').val()
-    //         };
-    //         $.get('/login', inputData, checkInput);
-    //     });
-
-    //     function checkInput(result) {
-    //         if (result === false) {
-    //             alert('Wrong password! Try again.')
-    //         }
-    //     }
-
-    //       $('#login-form').on('submit', function () {
-    //         confirm()
-    //         });
+Say what user is logged in
+Pretty home button
+Funky stars
 
 
 
-
-<li>{{ user_info[rating].get('title') }} {{ user_info[rating].get('score') }}</li>
+    <p id='all_ratings'>Show All Ratings</p>
+      <div id='ratings' hidden>
+        <ul>
+        {% for rating in ratings %}
+          <li>{{ ratings[rating] }}</li>
+        {% endfor %}
+        </ul>
+      </div>

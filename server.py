@@ -59,7 +59,15 @@ def movie_list():
 
 @app.route('/movies/<movie_id>')
 def display_movie_info(movie_id):
+    user_id = session.get('user_id')
+
+    if user_id:
+        user_rating = Rating.query.filter_by(movie_id=movie_id, user_id=user_id).first()
+    else:
+        user_rating = None
+
     movie = Movie.query.get(movie_id)
+
     ratings = {}
     total_ratings = 0
     score_sum = 0.0
@@ -69,13 +77,22 @@ def display_movie_info(movie_id):
         score_sum += rating.score
 
     release = movie.released_at.strftime('%B %d, %Y')
+
     average = '{:.2f}'.format((score_sum/total_ratings))
+
+    prediction = None
+    if (not user_rating) and user_id:
+        user = User.query.get(user_id)
+        if user:
+            prediction = '{:.2f}'.format(user.predict_rating(movie))
+
     movie_info = {'title': movie.title, 'url': movie.imdb_url, 'released_at': release, 'movie_id': movie.movie_id}
     return render_template('movie_info.html',
                            movie_info=movie_info,
                            total=total_ratings,
                            average=average,
-                           ratings=ratings)
+                           ratings=ratings,
+                           prediction=prediction)
 
 
 @app.route('/rate-movie/<movie_id>', methods=['POST'])
@@ -93,7 +110,7 @@ def rate_movie(movie_id):
         flash('We have added your review')
     db.session.commit()
 
-    return display_movie_info(movie_id)
+    return redirect('/movies/' + movie_id)
 
 
 @app.route('/registration-form')
@@ -119,6 +136,8 @@ def register():
         db.session.commit()
         flash('User added!')
         session['email'] = email
+        user = User.query.filter(User.email == email).first()
+        session['user_id'] = user.user_id
 
     return redirect('/')  # change redirect route
 
@@ -144,6 +163,8 @@ def login():
         if current_user.password == password:
             flash('You have been logged in')
             session['email'] = email
+            user = User.query.filter(User.email == email).first()
+            session['user_id'] = user.user_id
             return redirect('/')
         else:
             flash('Confirm that you have entered the correct password')
