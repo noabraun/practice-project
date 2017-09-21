@@ -6,17 +6,20 @@
     Release Date: {{ movie_info['released_at'] }}<br>
     <br>
     <p>Average Rating: {{ average }} out of {{ total }} ratings</p>
-    <p>We predict that you will rate this movie: {{ prediction }}</p>
-
+    {% if prediction %}
+      <p>We predict that you will rate this movie: {{ "{:.2f}".format(prediction)}}</p>
+    {% endif %}
 
       {% if 'email' in session %}
           <form action="/rate-movie/{{ movie_info['movie_id'] }}" method='POST'>
-            Rate movie out of 5: <input type='text' id='rate_movie' name='rating'>
+            Rate movie out of 5: <input type='text' id='rate_movie' name='rating' min='1' max = '5'>
             <input type='submit'>
           </form>
 
       {% endif %}
 
-    <h2>The Eye says: <span id='beratement'>{{ beratement }}</span></h2>
+    <span id='beratement'>
+        <h2>The Eye says: {{ beratement }}</h2>
+    </span>
 
 {% endblock %}

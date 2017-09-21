@@ -46,7 +46,7 @@ def display_user_info(user_id):
     # for user in users:
     #     if user. is not None:
     user_info = {'age': user.age, 'zipcode': user.zipcode, 'ratings': ratings}
-    return render_template('user_info.html', user_info=user_info)
+    return render_template('user_info.html', user_info=user_info, user_id=user_id)
 
 
 @app.route('/movies')
@@ -118,12 +118,13 @@ def display_movie_info(movie_id):
 
     release = movie.released_at.strftime('%B %d, %Y')
     movie_info = {'title': movie.title, 'url': movie.imdb_url, 'released_at': release, 'movie_id': movie.movie_id}
+    print 'prediction', prediction
     return render_template('movie_info.html',
                            movie_info=movie_info,
                            total=total_ratings,
                            average=average,
                            ratings=ratings,
-                           prediction='{:.2f}'.format(prediction),
+                           prediction=prediction,
                            beratement=beratement)
 
 

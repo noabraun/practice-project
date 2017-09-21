@@ -9,5 +9,8 @@
 <h2>Users</h2>
 <p><a href="/users">View all users</a></p>
 
-<h2>Don't have an account? Register <a href="/registration-form">Here</a></h2>
+{% if 'email' not in session %}
+    <h2>Don't have an account? Register <a href="/registration-form">Here</a></h2>
+{% endif %}
+
 {% endblock %}
