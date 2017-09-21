@@ -1,6 +1,8 @@
 <!doctype html>
 <html>
 <head>
+
+  <link rel='stylesheet' href='/static/styles.css'>
   <title>Ratings</title>
   {% for message in get_flashed_messages() %}
     {{ message }}
@@ -17,15 +19,12 @@
             $('#login').html('Logout');
         </script>
 
-
     {% endif %}
 
 
 </head>
 
 <body>
-  Ratings
-  <hr>
 
   {% block content %} put your content here {% endblock %}
 
