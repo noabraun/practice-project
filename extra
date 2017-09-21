@@ -12,3 +12,12 @@ Funky stars
         {% endfor %}
         </ul>
       </div>
+
+        <script>
+    $('#all_ratings').on('mouseover', function() {
+      $('#ratings').show();
+    });
+    $('#all_ratings').on('mouseout', function() {
+      $('#ratings').hide();
+    });
+  </script>

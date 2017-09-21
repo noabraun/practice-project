@@ -9,7 +9,6 @@
     <p>We predict that you will rate this movie: {{ prediction }}</p>
 
 
-
       {% if 'email' in session %}
           <form action="/rate-movie/{{ movie_info['movie_id'] }}" method='POST'>
             Rate movie out of 5: <input type='text' id='rate_movie' name='rating'>
@@ -17,5 +16,7 @@
           </form>
 
       {% endif %}
+
+    <h2>The Eye says: <span id='beratement'>{{ beratement }}</span></h2>
 
 {% endblock %}
