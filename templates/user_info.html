@@ -13,7 +13,8 @@
 
       {% for rating in user_info['ratings'] %}
       <tr>
-        <td>{{ user_info.get('ratings').get(rating).get('title') }}</td>
+       <td> <a href="/movies/{{user_info.get('ratings').get(rating).get('movie_id')}}"> {{ user_info.get('ratings').get(rating).get('title') }}</td>
+
         <td>{{ user_info.get('ratings').get(rating).get('score') }}</td>
       </tr>
       {% endfor %}

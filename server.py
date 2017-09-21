@@ -39,7 +39,7 @@ def display_user_info(user_id):
     user = User.query.get(user_id)
     ratings = {}
     for rating in user.ratings:
-        ratings[rating.movie_id] = {'title': rating.movie.title, 'score': rating.score}
+        ratings[rating.movie_id] = {'title': rating.movie.title, 'score': rating.score, 'movie_id': rating.movie.movie_id}
 
     print ratings
     # users = User.query.options(db.joinedload('user_id')).all()
